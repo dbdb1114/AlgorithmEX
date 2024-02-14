@@ -1,8 +1,8 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.StringTokenizer;
-
 
 class Main {
     public static void main(String[] args) throws IOException {
@@ -13,17 +13,15 @@ class Main {
         int n = Integer.parseInt(st.nextToken());
         int m = Integer.parseInt(st.nextToken());
 
-        int[] primeArr = new int[m+1];
-        for (int i = 2; i <= m; i++) {
-            primeArr[i] = i;
-        }
+        boolean[] primeArr = new boolean[m+1];
+        Arrays.fill(primeArr,2,m+1,true);
 
         for (int i = 2; i <= Math.sqrt(m); i++) {
             checkNotPrime(primeArr,i);
         }
 
         for (int i = n; i < m+1; i++) {
-            if(primeArr[i] != 0){
+            if(primeArr[i]){
                 sb.append(i).append("\n");
             }
         }
@@ -31,9 +29,9 @@ class Main {
         System.out.println(sb);
     }
 
-    static void checkNotPrime(int[] primeArr, int now){
+    static void checkNotPrime(boolean[] primeArr, int now){
         for (int i = 2; now*i < primeArr.length; i++) {
-            primeArr[now*i] = 0;
+            primeArr[now*i] = false;
         }
     }
 }
