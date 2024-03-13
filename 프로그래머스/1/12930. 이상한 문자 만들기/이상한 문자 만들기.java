@@ -1,39 +1,20 @@
 class Solution {
     public String solution(String s) {
-        StringBuilder sb = new StringBuilder();
-        
-        int wordPointer = 1;
-        int totPointer = 0;
-        
-        while(totPointer < s.length()){
-            
-            char target = s.charAt(totPointer);
-            
-            if(isSpace(target)){
-                totPointer++; 
-                wordPointer = 1;
-                sb.append(' ');
-                continue;
-            }
-            
-            if(isOdd(wordPointer)){
-                sb.append(Character.toUpperCase(target));
-            } else {
-                sb.append(Character.toLowerCase(target));
-            }
-            
-            totPointer++; 
-            wordPointer++;
-        }
-        
-        return sb.toString();
-    }
-    
-    public boolean isSpace(char ch){
-        return ch == ' ';
-    }
-    
-    public boolean isOdd(int num){
-        return num % 2 == 1;
+        StringBuilder answer = new StringBuilder();
+        String[] spl = s.split(" ",-1);
+        int cnt = 0;
+
+       for(String str : spl){
+           for(int i=0; i < str.length(); i++) {
+
+               answer.append( 
+                   i % 2 != 0 ?
+                       Character.toLowerCase(str.charAt(i)) : 
+                   Character.toUpperCase(str.charAt(i)));
+           }
+           answer.append(" ");
+       }
+       answer.deleteCharAt(answer.length()-1);
+       return answer.toString();
     }
 }
