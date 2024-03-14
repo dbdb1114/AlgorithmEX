@@ -22,6 +22,11 @@ class Solution {
         }
         
         for(int i = st; i < number.length; i++){
+            
+            if(cnt == 0 && st > number.length - 3){
+                break;
+            }
+            
             cnt++;
             sum += number[i];
             
