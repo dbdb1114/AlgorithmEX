@@ -20,12 +20,19 @@ public class Main {
 
         int smallSquare = 0;
         int bigSquare = 0;
-        
+
         for (int i = 0; i < hexagon.size(); i++) {
-            if(hexagon.get(i)[0] == hexagon.get(prevIdx(hexagon,i,2))[0]
-                    && hexagon.get(prevIdx(hexagon,i,1))[0] == hexagon.get(prevIdx(hexagon,i,3))[0]){
-                smallSquare = hexagon.get(prevIdx(hexagon,i,2))[1] * hexagon.get(prevIdx(hexagon,i,1))[1];
-                bigSquare = (hexagon.get(i)[1] + hexagon.get(prevIdx(hexagon,i,2))[1]) * (hexagon.get(prevIdx(hexagon,i,1))[1] + hexagon.get(prevIdx(hexagon,i,3))[1]);
+            
+            int onePrev = prevIdx(hexagon,i,1);
+            int twoPrev = prevIdx(hexagon,i,2);
+            int threePrev = prevIdx(hexagon,i,3);
+            
+            if(hexagon.get(i)[0] == hexagon.get(twoPrev)[0]
+                    && hexagon.get(onePrev)[0] == hexagon.get(threePrev)[0]){
+                
+                smallSquare = hexagon.get(twoPrev)[1] * hexagon.get(prevIdx(hexagon,i,1))[1];
+                bigSquare = (hexagon.get(i)[1] + hexagon.get(twoPrev)[1]) * (hexagon.get(onePrev)[1] + hexagon.get(threePrev)[1]);
+                
                 break;
             }
         }
