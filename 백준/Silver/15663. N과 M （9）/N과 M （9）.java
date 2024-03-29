@@ -21,22 +21,10 @@ public class Main {
         nArr = Arrays.stream(bf.readLine().split(" ")).mapToInt(Integer::parseInt).sorted().toArray();
         set = new HashSet<>();
 
-        recursive(0,seqArr);
+        recursive(0,new StringBuilder());
     }
-/*
-5 3
-12 145 23 52 2
-
-5 2
-1 21 451 21 1
-
-5 2
-14 14 5 12 3
- */
-    public static void recursive(int dept, int[] seqArr){
+    public static void recursive(int dept, StringBuilder sb){
         if(dept == M){
-            StringBuilder sb = new StringBuilder();
-            Arrays.stream(seqArr).forEach(x->sb.append(x+" "));
             String s = sb.toString().trim();
             if(!set.contains(s)){
                 System.out.println(s);
@@ -47,10 +35,10 @@ public class Main {
         for (int i = 0; i < nArr.length; i++) {
             if(ckArr[i]) continue;
             ckArr[i] = true;
-            seqArr[dept] = nArr[i];
-            recursive(dept + 1, seqArr);
+            sb.append(nArr[i] + " ");
+            recursive(dept + 1, sb);
             ckArr[i] = false;
-            seqArr[dept] = -1;
+            sb.delete(sb.lastIndexOf(nArr[i] + " "), sb.length());
         }
     }
 }
