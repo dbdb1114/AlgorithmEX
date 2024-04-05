@@ -24,12 +24,10 @@ public class Main {
         }
 
         int prev = 0;
-
         for (Long aLong : treeMap.keySet()) {
-            Integer prev1 = treeMap.get(aLong);
-            treeMap.put(aLong, prev);
-            prev += prev1;
+            treeMap.put(aLong, prev++);
         }
+
 
         for (int i = 0; i < N; i++) {
             sb.append(treeMap.get(nArr[i]) + " ");
