@@ -135,17 +135,18 @@ public class Main {
         if( sum > answer ){
             return;
         }
+        
+        visited[now] = true;
 
         for (int node: nodes[now]) {
             if(visited[node]) continue;
-            visited[now] = true;
             sum += W[now][node];
 
             DFS(start, node, sum, depth + 1);
 
             sum -= W[now][node];
-            visited[now] = false;
         }
+        visited[now] = false;
     }
 
 }
