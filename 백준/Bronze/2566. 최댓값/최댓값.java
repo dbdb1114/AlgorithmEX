@@ -1,51 +1,24 @@
-import java.io.*;
-import java.util.*;
-import java.util.function.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Main {
-
-    static BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
-
-
-    public static void main(String[] args) throws Exception{
-        
-        int max = -1;
-        
-        int maxX = 0;
-        int maxY = 0;
-        
+    public static void main(String[] args) throws IOException {
+        BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+        int max = 0;
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 9; i++) {
-            
-            int[] ar = getIntAr();
-            int[] lineMax = getMax.apply(ar); // [0]은 큰 값, [1]은 위치
-            
-            if(max < lineMax[0]){
-                
-                max = lineMax[0];
-                
-                maxY = lineMax[1] + 1;
-                maxX = i + 1;
-                
+            String line = bf.readLine();
+            String[] arr = line.split(" ");
+            for (int j = 0; j < arr.length; j++) {
+                int target = Integer.parseInt(arr[j]);
+                if(max <= target){
+                    max = target;
+                    sb.setLength(0);
+                    sb.append(target).append("\n").append((i + 1) + " " + (j + 1));
+                }
             }
         }
-        
-        System.out.println(max);
-        System.out.println(maxX + " " + maxY);
+        System.out.println(sb);
     }
-
-
-    static int[] getIntAr() throws IOException {
-        return Arrays.stream(bf.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-    }
-
-    static Function<int[], int[]> getMax = (ar) -> {
-        int[] max = new int[2];
-        for (int i = 0; i < ar.length; i++) {
-            if(ar[i] > max[0]){
-                max[0] = ar[i];
-                max[1] = i;
-            }
-        }
-        return max;
-    };
 }
