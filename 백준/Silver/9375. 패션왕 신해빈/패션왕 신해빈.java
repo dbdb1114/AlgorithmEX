@@ -1,89 +1,63 @@
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.List;
 
 /**
- 첫째 줄에 테스트 케이스가 주어진다. 테스트 케이스는 최대 100이다.
-
- 각 테스트 케이스의 첫째 줄에는 해빈이가 가진 의상의 수 n(0 ≤ n ≤ 30)이 주어진다.
- 다음 n개에는 해빈이가 가진 의상의 이름과 의상의 종류가 공백으로 구분되어 주어진다.
- 같은 종류의 의상은 하나만 입을 수 있다.
-
- 모든 문자열은 1이상 20이하의 알파벳 소문자로 이루어져있으며 같은 이름을 가진 의상은 존재하지 않는다.
-
-
- Map으로 받아서 카테고리별 갯수를 파악한다.
- key를 재귀함수를 통해 1개일때, 2개일때, 3개일때 -- 모두 곱하여 구한다.
- 재귀 함수를 이용한다. DFS
-
- 경우의 수
- ex
- hat headgear
- sunglasses eyewear
- turban headgear
- skirt down
-
- header - 2
- eyewear - 1
- down - 1
-
- 1 + 1 + 2
- 2 * 1 / 2 * 1
- 2 * 1 * 1
-
- {1,1,2}
- DFS ( 1, 0, new int[i], 0, ar );
- DFS(int limit, int depth, int[] case, int st, int[] ar){
-    if(depth == limit){
-        sum += case;
-        break;
-    }
-    for(i = st ~ ar.length - 1){
-        case[depth] = ar[i];
-        DFS(limit, depth+1, case, st, ar);
-    }
- }
-
-
+ * 문제
+ * 해빈이는 패션에 매우 민감해서 한번 입었던 옷들의 조합을 절대 다시 입지 않는다.
+ * 예를 들어 오늘 해빈이가 안경, 코트, 상의, 신발을 입었다면,
+ * 다음날은 바지를 추가로 입거나 안경대신 렌즈를 착용하거나 해야한다.
+ * 해빈이가 가진 의상들이 주어졌을때 과연 해빈이는 알몸이 아닌 상태로 며칠동안 밖에 돌아다닐 수 있을까?
+ *
+ * 입력
+ * 첫째 줄에 테스트 케이스가 주어진다. 테스트 케이스는 최대 100이다.
+ *
+ * 각 테스트 케이스의 첫째 줄에는 해빈이가 가진 의상의 수 n(0 ≤ n ≤ 30)이 주어진다.
+ * 다음 n개에는 해빈이가 가진 의상의 이름과 의상의 종류가 공백으로 구분되어 주어진다. 같은 종류의 의상은 하나만 입을 수 있다.
+ * 모든 문자열은 1이상 20이하의 알파벳 소문자로 이루어져있으며 같은 이름을 가진 의상은 존재하지 않는다.
+ *
+ * 출력
+ * 각 테스트 케이스에 대해 해빈이가 알몸이 아닌 상태로 의상을 입을 수 있는 경우를 출력하시오.
  * */
 public class Main {
 
-    static int pactorial(int n){
-        // n 개중엔 m개 고르는 것
-        int res = 1;
-        for (int i = 1; i <= n; i++) {
-            res *= i;
-        }
-        return res;
-    }
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int testCase = Integer.parseInt(br.readLine());
 
-    static int nCm(int n, int m){
-        return pactorial(n)/(pactorial(m) * pactorial(n-m));
-    }
+        for (int i = 0; i < testCase; i++) {
+            int clothCase = Integer.parseInt(br.readLine());
+            HashMap<String, Integer> map = new HashMap<>();
 
-    public static void main(String[] args) throws Exception{
-        BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
-        int T = Integer.parseInt(bf.readLine());
-        Map<String, Integer> map = new HashMap<>();
-
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < T; i++) {
-            int N = Integer.parseInt(bf.readLine());
-
-            for (int j = 0; j < N; j++) {
-                StringTokenizer s = new StringTokenizer(bf.readLine());
-                s.nextToken();
-                String key = s.nextToken();
-                map.put(key, map.getOrDefault(key,0)+1);   // N
+            for (int j = 0; j < clothCase; j++) {
+                String[] cloth = br.readLine().split(" ");
+                map.putIfAbsent(cloth[1], 0);
+                map.put(cloth[1], map.get(cloth[1]) + 1);
             }
-            int sum = map.values().stream().reduce(1,(a, b) -> a * (b + 1)) - 1;
-            sb.append(sum + "\n");
-            map.clear();
+
+            if(map.isEmpty()){
+                System.out.println(0);
+                continue;
+            }
+            
+            int answer = 0;
+
+            if(map.keySet().size()>1){
+                int multiply = 1;
+                for(String key : map.keySet()){
+                    Integer ea = map.get(key) + 1;
+                    multiply *= ea;
+                }
+                answer = multiply - 1;
+            } else {
+                for(String key : map.keySet()){
+                    answer += map.get(key);
+                }
+            }
+            System.out.println(answer);
         }
-        
-        sb.delete(sb.length()-1, sb.length());
-        System.out.println(sb);
     }
 }
