@@ -1,79 +1,85 @@
+
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.stream.Collectors;
 
+/**
+ *문제
+ * 여러분도 알다시피 여러분의 프린터 기기는 여러분이 인쇄하고자 하는 문서를 인쇄 명령을 받은 ‘순서대로’,
+ * 즉 먼저 요청된 것을 먼저 인쇄한다. 여러 개의 문서가 쌓인다면 Queue 자료구조에 쌓여서 FIFO - First In First Out - 에 따라 인쇄가 되게 된다.
+ * 하지만 상근이는 새로운 프린터기 내부 소프트웨어를 개발하였는데, 이 프린터기는 다음과 같은 조건에 따라 인쇄를 하게 된다.
+ *
+ * 현재 Queue의 가장 앞에 있는 문서의 ‘중요도’를 확인한다.
+ * 나머지 문서들 중 현재 문서보다 중요도가 높은 문서가 하나라도 있다면,
+ * 이 문서를 인쇄하지 않고 Queue의 가장 뒤에 재배치 한다. 그렇지 않다면 바로 인쇄를 한다.
+ * 예를 들어 Queue에 4개의 문서(A B C D)가 있고, 중요도가 2 1 4 3 라면 C를 인쇄하고, 다음으로 D를 인쇄하고 A, B를 인쇄하게 된다.
+ *
+ * 여러분이 할 일은, 현재 Queue에 있는 문서의 수와 중요도가 주어졌을 때,
+ * 어떤 한 문서가 몇 번째로 인쇄되는지 알아내는 것이다.
+ * 예를 들어 위의 예에서 C문서는 1번째로, A문서는 3번째로 인쇄되게 된다.
+ *
+ * 입력
+ * 첫 줄에 테스트케이스의 수가 주어진다. 각 테스트케이스는 두 줄로 이루어져 있다.
+ *
+ * 테스트케이스의 첫 번째 줄에는 문서의 개수 N(1 ≤ N ≤ 100)과,
+ * 몇 번째로 인쇄되었는지 궁금한 문서가 현재 Queue에서 몇 번째에 놓여 있는지를 나타내는 정수 M(0 ≤ M < N)이 주어진다.
+ * 이때 맨 왼쪽은 0번째라고 하자. 두 번째 줄에는 N개 문서의 중요도가 차례대로 주어진다. 중요도는 1 이상 9 이하의 정수이고, 중요도가 같은 문서가 여러 개 있을 수도 있다.
+ *
+ * 출력
+ * 각 테스트 케이스에 대해 문서가 몇 번째로 인쇄되는지 출력한다.
+ * */
 public class Main {
-    /**
-     *
-     * 첫 줄에 테스트케이스의 수가 주어진다. 각 테스트케이스는 두 줄로 이루어져 있다.
-     *
-     * 테스트케이스의 첫 번째 줄에는 문서의 개수 N(1 ≤ N ≤ 100)과,
-     * 몇 번째로 인쇄되었는지 궁금한 문서가 현재 Queue에서 몇 번째에 놓여 있는지를 나타내는 정수 M(0 ≤ M < N)
-     *
-     * 프린트 과정
-     * 1. 현재 Queue의 가장 앞에 있는 문서의 ‘중요도’를 확인한다.
-     * 2. 나머지 문서들 중 현재 문서보다 중요도가 높은 문서가 하나라도 있다면,
-     * 이 문서를 인쇄하지 않고 Queue의 가장 뒤에 재배치 한다. 그렇지 않다면 바로 인쇄를 한다.
-     *
-     *  => 만약에, 문서의 중요도가 가장 높지 않다면, poll 해서 add 한다.
-     *
-     *
-     *  접근 방식
-     *  1. 우선순위 큐를 만들어서, 해당 큐에 넣어준다.
-     *  2. 현재 큐와 우선순위 큐가 같아질 때까지
-     *      빼고 뒤로 넣기를 반복한다.
-     *
-     * */
-    public static void main(String[] args) throws Exception{
-        BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int testCount = Integer.parseInt(br.readLine());
 
-        int N = Integer.parseInt(bf.readLine());
+        for (int i = 0; i < testCount; i++) {
+            String[] line = br.readLine().split(" ");
+            int N = Integer.parseInt(line[0]);
+            int M = Integer.parseInt(line[1]);
 
-        PriorityQueue<String> priorityQueue = new PriorityQueue<>(Comparator.reverseOrder());
-        Queue<String> probQueue = new LinkedList<>();
-        
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < N; i++) {
-            String[] s = bf.readLine().split(" ");
+            List<Integer> list = Arrays.stream(br.readLine().split(" ")).map(Integer::parseInt).collect(Collectors.toList());
 
-            int len = Integer.parseInt(s[0]);
-            int find = Integer.parseInt(s[1]);
-
-            /**
-             * 원래 String 정렬을 쓰면 100이 2앞에 있는
-             * 일반적인 정렬이 안 되지만, 현재 문제는
-             * 0~9만 주어지므로 상관x
-             * */
-            String[] queueStr = bf.readLine().split(" ");
-
-            priorityQueue.addAll(List.of(queueStr));
-            queueStr[find] = queueStr[find] + "F"; // 색인 남기기
-            probQueue.addAll(List.of(queueStr));
-
-            int order = 0;
-            int answer = 0;
-            
-            while(true){
-                if(priorityQueue.peek().charAt(0) == probQueue.peek().charAt(0)){
-                    priorityQueue.poll();
-                    String poll = probQueue.poll();
-                    order++;
-                    if(poll.charAt(poll.length()-1) == 'F'){
-                        answer = order;
-                        break;
-                    }
+            Queue<Doc> queue = new LinkedList<>();
+            for (int j = 0; j < list.size(); j++) {
+                if(j == M){
+                    queue.add(new Doc(list.get(j), true));
                 } else {
-                    String poll = probQueue.poll();
-                    probQueue.add(poll);
+                    queue.add(new Doc(list.get(j), false));
                 }
             }
 
-            sb.append(answer + "\n");
-            probQueue.clear();
-            priorityQueue.clear();
+            list = list.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+            int nowPos = 0;
+            while(!queue.isEmpty()){
+                Doc poll = queue.poll();
 
+                if(poll.score == list.get(nowPos)){
+                    if(poll.isTarget){
+                        System.out.println(N - queue.size());
+                        break;
+                    }
+                    nowPos++;
+                    continue;
+                }
+
+                queue.add(poll);
+            }
         }
-        System.out.println(sb);
     }
-    
+}
+
+class Doc{
+    public Doc (int score, boolean isTarget){
+        this.score = score;
+        this.isTarget = isTarget;
+    }
+    int score;
+    boolean isTarget;
 }
