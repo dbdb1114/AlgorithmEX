@@ -3,6 +3,7 @@ import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
 
+
 /**
  * 해결 전략
  * BFS로 순회하면서 기록하면 될 것 같음
@@ -43,19 +44,14 @@ public class Main {
 				if (map[i][j] == 2) {
 					goal[0] = i;
 					goal[1] = j;
+					answer[i][j] = 0;
+				} else if (map[i][j] == 1){
+					answer[i][j] = -1;
 				}
 			}
 		}
 
 		BFS(goal);
-        
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < M; j++) {
-				if(map[i][j] == 1 && answer[i][j] == 0){
-					answer[i][j] = -1;
-				}
-			}
-		}
 
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < M; j++) {
@@ -71,35 +67,26 @@ public class Main {
 	}
 
 	public static void BFS(int[] start){
-        Queue<int[]> queue = new LinkedList<>();
-        queue.add(new int[] {start[0], start[1], 0});
+		// PriorityQueue<int[]> queue = new PriorityQueue<>(Comparator.comparing(num -> num[2]));
+		Queue<int[]> queue = new LinkedList<>();
+		queue.add(new int[] {start[0], start[1], 0});
 
 		while(!queue.isEmpty()){
-			int[] poll = queue.poll();
+			int[] cur = queue.poll();
 
-			int nowX = poll[0];
-			int nowY = poll[1];
-			int nowDist = poll[2];
-
-			if(visited[nowX][nowY]){
-				continue;
-			}
-
-			visited[nowX][nowY] = true;
-			answer[nowX][nowY] = nowDist;
+			int x = cur[0];
+			int y = cur[1];
+			int dist = cur[2];
 
 			for (int i = 0; i < 4; i++) {
-				int newX = nowX + dx[i];
-				int newY = nowY + dy[i];
-				int newDist = nowDist + 1;
-				if(isValidIdx(newX, newY) && !visited[newX][newY]) {
-					queue.add(new int[] {newX, newY, newDist});
+				int newX = x + dx[i];
+				int newY = y + dy[i];
+				if (newX >= 0 && newX < N && newY >= 0 && newY < M && map[newX][newY] == 1 && answer[newX][newY] == -1) {
+					answer[newX][newY] = dist+1;
+					queue.add(new int[] {newX, newY, dist + 1});
 				}
 			}
 		}
 	}
 
-	private static boolean isValidIdx(int x, int y){
-		return x < N && x >= 0 && y < M && y >= 0 && map[x][y] == 1;
-	}
 }
