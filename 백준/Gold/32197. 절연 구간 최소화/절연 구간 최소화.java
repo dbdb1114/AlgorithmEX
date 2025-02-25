@@ -51,6 +51,10 @@ class Main {
 			}
 
 			dist[now] = nowDist;
+			
+			if(end == now){
+				break;
+			}
 
 			for(int[] edge : edges[now]) {
 				int edgeDist = 0;
