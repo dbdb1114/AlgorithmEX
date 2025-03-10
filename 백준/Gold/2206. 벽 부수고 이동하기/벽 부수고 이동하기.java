@@ -33,7 +33,7 @@ class Main {
 			}
 		}
 
-		PriorityQueue<int[]> queue = new PriorityQueue<>(Comparator.comparing(ar->ar[2]));
+		Queue<int[]> queue = new LinkedList<>();
 		// Queue<int[]> queue = new LinkedList<>();
 		queue.add(new int[] {0,0,1,0});
 		dist[0][0][0] = 1;
