@@ -2,11 +2,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
-import java.util.PriorityQueue;
-import java.util.Set;
 import java.util.StringTokenizer;
 
 class Main {
@@ -21,23 +17,6 @@ class Main {
 
 		public Plug(int electron){
 			this.electron = electron;
-		}
-
-
-		@Override
-		public boolean equals(Object o){
-			Plug p = (Plug) o;
-			return this.electron == p.electron;
-		}
-
-		@Override
-		public int hashCode(){
-			return Objects.hashCode(electron);
-		}
-
-		@Override
-		public String toString(){
-			return "electron = " + electron +", " + "nextUse" + nextUse;
 		}
 	}
 	public static void main(String[] args) throws Exception {
@@ -56,31 +35,41 @@ class Main {
 			electrons[i].nextUse = findNextUse(electrons, i);
 		}
 
-		PriorityQueue<Plug> nowUseQueue = new PriorityQueue<>(Comparator.comparingInt(p->p.nextUse * -1));
-		Set<Plug> plugSet = new HashSet<>();
+		List<Plug> nowUseList = new ArrayList<>();
+
 		// 첫 사용 초기화
 		int idx = 0;
-		while(idx < electrons.length && nowUseQueue.size() < N) {
-			if(electrons[idx].nextUse < idx + (N - nowUseQueue.size())){
+		while(idx < electrons.length && nowUseList.size() < N) {
+			if(electrons[idx].nextUse < idx + (N - nowUseList.size())){
 			    idx++;
 				continue;
 			}
-			nowUseQueue.add(electrons[idx]);
-			plugSet.add(electrons[idx]);
+			nowUseList.add(electrons[idx]);
 			idx++;
 		}
 
 		int answer = 0;
-		// 사용중인 plug,
-		// 사용중인 plug 기록.
+		nowUseList.sort(Comparator.comparing(plug -> plug.nextUse * -1));
 		for(int i = idx; i < electrons.length; i++){
-			if(!plugSet.contains(electrons[i])){
-				answer++;
-				Plug cur = nowUseQueue.poll();
-				plugSet.remove(cur);
-				plugSet.add(electrons[i]);
+			boolean isExist = false;
+			int existIdx = 0;
+
+			for (int j = 0; j < nowUseList.size(); j++) {
+				if(electrons[i].electron == nowUseList.get(j).electron){
+					isExist = true;
+					existIdx = j;
+					break;
+				}
 			}
-			nowUseQueue.add(electrons[i]);
+
+			if(isExist){
+				nowUseList.get(existIdx).nextUse = electrons[i].nextUse;
+			} else {
+				answer++;
+				nowUseList.remove(0);
+				nowUseList.add(electrons[i]);
+			}
+			nowUseList.sort(Comparator.comparing(plug -> plug.nextUse * -1));
 		}
 
 		System.out.println(answer);
@@ -96,3 +85,10 @@ class Main {
 		return 101;
 	}
 }
+//  = > 1
+// 1 2 3 4 5 1 2 3 4 5 1 2 3 4 5 1 2 3 4 5
+
+// 1 2 3 4 ;
+// 1 2 3 5 / 1 => 4
+// 1 2 4 5 / 2 => 3
+// 1 3 4 5 / 3 => 2
