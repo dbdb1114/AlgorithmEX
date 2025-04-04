@@ -76,73 +76,37 @@ class Main {
 			int x = airCleaner.get(i)[0];
 			int y = airCleaner.get(i)[1];
 			int[] dx;
-			int[] dy;
-			int prevDust = 0;
-			int d = 0;
 			if(i == 0){
 				dx = new int[] {0, -1, 0, 1};
-				dy = new int[] {1, 0, -1, 0};
-
-				x += dx[d];
-				y += dy[d];
-
-				while(x != airCleaner.get(i)[0] || y != airCleaner.get(i)[1]){
-					if(x < 0 || x >= dustMap.length || y < 0 || y >= dustMap[0].length){
-						x -= dx[d];
-						y -= dy[d];
-						d = ++d % 4;
-						x += dx[d];
-						y += dy[d];
-						continue;
-					}
-
-					if(x > airCleaner.get(i)[0]){
-						x -= dx[d];
-						y -= dy[d];
-						d = ++d % 4;
-						x += dx[d];
-						y += dy[d];
-						continue;
-					}
-
-					int temp = dustMap[x][y];
-					dustMap[x][y] = prevDust;
-					prevDust = temp;
-					x += dx[d];
-					y += dy[d];
-				}
 			} else {
 				dx = new int[] {0, 1, 0, -1};
-				dy = new int[] {1, 0, -1, 0};
+			}
 
-				x += dx[d];
-				y += dy[d];
+			int[] dy = new int[] {1, 0, -1, 0};;
+			int prevDust = 0;
+			int d = 0;
 
-				while(x != airCleaner.get(i)[0] || y != airCleaner.get(i)[1]){
-					if(x < 0 || x >= dustMap.length || y < 0 || y >= dustMap[0].length){
-						x -= dx[d];
-						y -= dy[d];
-						d = ++d % 4;
-						x += dx[d];
-						y += dy[d];
-						continue;
-					}
-
-					if(x < airCleaner.get(i)[0]){
-						x -= dx[d];
-						y -= dy[d];
-						d = ++d % 4;
-						x += dx[d];
-						y += dy[d];
-						continue;
-					}
-
-					int temp = dustMap[x][y];
-					dustMap[x][y] = prevDust;
-					prevDust = temp;
+			x += dx[d];
+			y += dy[d];
+			
+			while(x != airCleaner.get(i)[0] || y != airCleaner.get(i)[1]){
+				if((x < 0 || x >= dustMap.length || y < 0 || y >= dustMap[0].length) ||
+					(i == 0 && x > airCleaner.get(i)[0]) || 
+					(i == 1 && x < airCleaner.get(i)[0])
+				){
+					x -= dx[d];
+					y -= dy[d];
+					d = ++d % 4;
 					x += dx[d];
 					y += dy[d];
+					continue;
 				}
+
+				int temp = dustMap[x][y];
+				dustMap[x][y] = prevDust;
+				prevDust = temp;
+				x += dx[d];
+				y += dy[d];
 			}
 
 		}
