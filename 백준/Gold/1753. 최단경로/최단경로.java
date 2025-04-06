@@ -17,12 +17,14 @@ class Main {
 		int start = Integer.parseInt(br.readLine());
 
 		List<int[]>[] adjcList = new List[V+1];
-		int[] dist = new int[V+1];
-		Arrays.fill(dist, Integer.MAX_VALUE);
 
 		for(int i = 0; i < V+1; i++){
 			adjcList[i] = new ArrayList<>();
 		}
+
+		int[] dist = new int[V+1];
+		Arrays.fill(dist, Integer.MAX_VALUE);
+		dist[start] = 0;
 
 		for(int i = 0; i < E; i++){
 			StringTokenizer st1 = new StringTokenizer(br.readLine());
@@ -32,7 +34,7 @@ class Main {
 			adjcList[u].add(new int[] {v,w});
 		}
 
-		PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparing(a->a[1]));
+		PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(a->a[1]));
 		pq.add(new int[] {start, 0});
 
 		while(!pq.isEmpty()){
@@ -40,33 +42,23 @@ class Main {
 			int n = cur[0];
 			int d = cur[1];
 
+			if(dist[n] < d) continue;
+
 			for(int[] next : adjcList[n]){
 				int newN = next[0];
 				int newD = d + next[1];
 
-				if(dist[newN] <= newD){
-					continue;
+				if(dist[newN] > newD){
+					dist[newN] = newD;
+					pq.add(new int[] {newN, newD});
 				}
-				dist[newN] = newD;
-
-				pq.add(new int[] {newN, newD});
 			}
 		}
 
 		StringBuilder sb = new StringBuilder();
-		for(int i = 1; i < V+1; i++){
-			if (i == start) {
-				sb.append(0);
-			} else if(dist[i] == Integer.MAX_VALUE){
-				sb.append("INF");
-			} else {
-				sb.append(dist[i]);
-			}
-			if(i != V){
-				sb.append("\n");
-			}
+		for (int i = 1; i <= V; i++) {
+			sb.append(dist[i] == Integer.MAX_VALUE ? "INF" : dist[i]).append("\n");
 		}
-
-		System.out.println(sb);
+		System.out.print(sb);
 	}
 }
