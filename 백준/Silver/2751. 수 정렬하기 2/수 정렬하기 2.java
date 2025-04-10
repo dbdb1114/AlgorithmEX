@@ -5,14 +5,14 @@ public class Main {
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int N = Integer.parseInt(br.readLine());
-        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        int[] arr = new int[N];
         for(int i = 0; i < N; i++){
-            pq.add(Integer.parseInt(br.readLine()));
+            arr[i] = Integer.parseInt(br.readLine());
         }
-        
+        Arrays.sort(arr);
         StringBuilder sb = new StringBuilder();
-        while(!pq.isEmpty()){
-            sb.append(pq.poll()).append("\n");
+        for(int n : arr){
+            sb.append(n).append("\n");
         }
         System.out.println(sb);
     }
